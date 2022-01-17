@@ -1,0 +1,68 @@
+-- Para abrir chamado para o DBA forçar a limpeza do LPN.
+/*
+  delete from wms_op_plan_instances
+  where source_task_id in (
+  select parent_line_id from mtl_material_transactions_temp
+  where  lpn_id = 45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236 union
+  select transaction_temp_id from mtl_material_transactions_temp
+  where  lpn_id = 45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236);
+  
+  delete from wms_op_operation_instances
+  where source_task_id in (
+  select transaction_temp_id from mtl_material_transactions_temp
+  where  lpn_id =45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236 union
+  select parent_line_id from mtl_material_transactions_temp
+  where  lpn_id = 45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236);
+  
+  delete from wms_dispatched_tasks where 
+  transaction_temp_id in (select transaction_temp_id from mtl_material_transactions_temp
+  where lpn_id =45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236 union
+  select parent_line_id from mtl_material_transactions_temp
+  where  lpn_id = 45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236);
+  
+  delete from mtl_transaction_lots_temp
+  where transaction_temp_id in (select transaction_temp_id from
+  mtl_material_transactions_temp where lpn_id =45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236);
+ 
+  delete from  mtl_material_transactions_temp
+  where transaction_temp_id in 
+  (select parent_line_id from mtl_material_transactions_temp
+  where lpn_id =45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236);
+  
+  delete from mtl_material_transactions_temp
+  where lpn_id =45483236 or transfer_lpn_id = 45483236
+  or content_lpn_id = 45483236;
+  
+  delete from mtl_transaction_lots_interface
+  where lot_number in (select lot_number
+  from wms_lpn_contents where parent_lpn_id = 45483236);
+  
+  delete from rcv_lots_interface
+  where interface_transaction_id in (select interface_transaction_id
+  from rcv_transactions_interface
+  where lpn_id = 45483236 or transfer_lpn_id = 45483236);
+  
+  delete from rcv_transactions_interface
+  where lpn_id = 45483236 or transfer_lpn_id = 45483236;
+  
+  UPDATE mtl_txn_request_lines
+  SET quantity_detailed = null, wms_process_flag = 1
+  WHERE lpn_id = 45483236
+  and line_status=7;
+  
+  update wms_lpn_contents
+  set source_header_id = NULL,
+  source_name = null
+  where parent_lpn_id = 45483236;
+
+  commit;
+
+END;   */
